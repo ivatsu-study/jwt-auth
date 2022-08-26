@@ -1,0 +1,94 @@
+{
+  "name": "jwt-auth",
+  "version": "0.1.0",
+  "description": "JWT based Auth with TDD approach",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "test": "better-npm-run test",
+    "lint": "eslint src tests",
+    "precommit": "lint-staged"
+  },
+  "betterScripts": {
+    "test": {
+      "command": "ava",
+      "env": {
+        "JWT_connection": "./tests/__data"
+      }
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ivatsu-study/jwt-auth.git"
+  },
+  "keywords": [
+    "jwt",
+    "node",
+    "koa"
+  ],
+  "author": "IvaTsu",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ivatsu-study/jwt-auth/issues"
+  },
+  "homepage": "https://github.com/ivatsu-study/jwt-auth#readme",
+  "dependencies": {
+    "ava": "^4.3.3",
+    "bcryptjs": "^2.4.3",
+    "koa": "^2.13.4",
+    "koa-router": "^12.0.0",
+    "lodash": "^4.17.21",
+    "rc": "^1.2.8"
+  },
+  "devDependencies": {
+    "better-npm-run": "^0.1.1",
+    "eslint": "^8.22.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.26.0",
+    "esm": "^3.2.25",
+    "husky": "^8.0.1",
+    "lint-staged": "^13.0.3",
+    "supertest-koa-agent": "^0.3.2"
+  },
+  "ava": {
+    "files": [
+      "tests/**/*.js",
+      "!tests/__data/**/*.js"
+    ],
+    "require": [
+      "esm"
+    ]
+  },
+  "eslintConfig": {
+    "extends": [
+      "airbnb-base",
+      "prettier"
+    ],
+    "env": {
+      "node": true
+    },
+    "settings": {
+      "import/resolver": {
+        "node": {
+          "extensions": [
+            ".js",
+            ".jsx",
+            ".ts",
+            ".tsx",
+            ".d.ts"
+          ]
+        }
+      }
+    }
+  },
+  "prettier": {
+    "singleQuote": true,
+    "trailingComma": "all"
+  }
+}
