@@ -1,6 +1,8 @@
 const Koa = require('koa');
 const Router = require('koa-router');
 
+require('dotenv').config();
+
 const config = require('./config');
 const authModule = require('./modules/auth/auth');
 const usersModule = require('./modules/users/users');
