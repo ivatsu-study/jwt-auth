@@ -1,17 +1,19 @@
-const Koa = require("koa");
-const Router = require("koa-router");
+const Koa = require('koa');
+const Router = require('koa-router');
 
-const config = require("./config");
-const usersModule = require("./modules/users/users");
+const config = require('./config');
+const authModule = require('./modules/auth/auth');
+const usersModule = require('./modules/users/users');
 
 function createApp() {
   const app = new Koa();
   const router = new Router();
-  router.get("/", (ctx) => {
-    ctx.body = "ok";
+  router.get('/', (ctx) => {
+    ctx.body = 'ok';
   });
 
-  router.use("/users", usersModule.routes());
+  router.use('/auth', authModule.routes());
+  router.use('/users', usersModule.routes());
 
   app.use(router.allowedMethods());
   app.use(router.routes());
