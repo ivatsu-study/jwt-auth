@@ -1,6 +1,7 @@
 const Koa = require('koa');
 const Router = require('koa-router');
 const bodyParser = require('koa-bodyparser');
+const jwtMiddleware = require('koa-jwt');
 
 require('dotenv').config();
 
@@ -18,6 +19,9 @@ function createApp() {
   });
 
   router.use('/auth', authModule.routes());
+  router.use(jwtMiddleware({
+    secret: config.secret,
+  }));
   router.use('/users', usersModule.routes());
 
   app.use(router.allowedMethods());
