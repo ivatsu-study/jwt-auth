@@ -1,5 +1,6 @@
 const Koa = require('koa');
 const Router = require('koa-router');
+const bodyParser = require('koa-bodyparser');
 
 require('dotenv').config();
 
@@ -9,6 +10,8 @@ const usersModule = require('./modules/users/users');
 
 function createApp() {
   const app = new Koa();
+  app.use(bodyParser());
+
   const router = new Router();
   router.get('/', (ctx) => {
     ctx.body = 'ok';

@@ -1,5 +1,4 @@
 const Router = require('koa-router');
-const bodyParser = require('koa-bodyparser');
 const { compareSync } = require('bcryptjs');
 const { v4: uuidv4 } = require('uuid');
 const jwt = require('jsonwebtoken');
@@ -9,7 +8,7 @@ const config = require('../../config');
 
 const router = new Router();
 
-router.post('/login', bodyParser(), async (ctx) => {
+router.post('/login', async (ctx) => {
   const { login, password } = ctx.request.body;
   const user = await find({ login });
   if (!user || !compareSync(password, user.password)) {
