@@ -14,7 +14,14 @@ test('User can successfully login', async (t) => {
   t.truthy(typeof res.body.refreshToken === 'string');
 });
 
-test.todo('User gets 403 on invalid credentials');
+test('User gets 403 on invalid credentials', async (t) => {
+  const res = await app.post('/auth/login').send({
+    login: 'INVALID_LOGIN',
+    password: 'INVALID_PASSWORD'
+  });
+  t.is(res.status, 403);
+});
+
 test.todo('User gets 401 on expired token');
 test.todo('User can refresh the access token using refresh token');
 test.todo('User can use refresh token only once');
