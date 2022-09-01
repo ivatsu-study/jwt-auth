@@ -29,7 +29,15 @@ test('User gets 401 on expired token', async t => {
   t.is(res.status, 401);
 });
 
-test.todo('User can refresh the access token using refresh token');
+test('User can get new access token using refresh token', async t => {
+  const res = await app.post('/auth/refresh').send({
+    refreshToken: 'REFRESH_TOKEN_1',
+  });
+  t.is(res.status, 200);
+  t.truthy(typeof res.body.token === 'string');
+  t.truthy(typeof res.body.refreshToken === 'string');
+});
+
 test.todo('User can use refresh token only once');
 test.todo('Refresh tokens become invalid on logout');
 test.todo('Multiple refresh tokens are valid');
