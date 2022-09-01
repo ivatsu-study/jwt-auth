@@ -13,7 +13,8 @@
     "test": {
       "command": "ava",
       "env": {
-        "JWT_connection": "./tests/__data"
+        "JWT_connection": "./tests/__data",
+        "JWT_secret": "TEST"
       }
     }
   },
@@ -64,7 +65,8 @@
   "ava": {
     "files": [
       "tests/**/*.js",
-      "!tests/__data/**/*.js"
+      "!tests/__data/**/*.js",
+      "!tests/helpers/**/*.js"
     ],
     "require": [
       "esm"
