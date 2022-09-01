@@ -1,6 +1,7 @@
 const test = require('ava');
 const agent = require('supertest-koa-agent');
 const createApp = require('../src/app');
+const issueToken = require('./helpers/issueToken');
 
 const app = agent(createApp());
 
@@ -22,7 +23,12 @@ test('User gets 403 on invalid credentials', async (t) => {
   t.is(res.status, 403);
 });
 
-test.todo('User gets 401 on expired token');
+test('User gets 401 on expired token', async t => {
+  const expiredToken = issueToken({ id: 1 }, { expiresIn: '1ms' });
+  const res = await app.get('/users').set('Authorization', `Bearer ${expiredToken}`);
+  t.is(res.status, 401);
+});
+
 test.todo('User can refresh the access token using refresh token');
 test.todo('User can use refresh token only once');
 test.todo('Refresh tokens become invalid on logout');
