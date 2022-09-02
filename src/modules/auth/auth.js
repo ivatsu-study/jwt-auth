@@ -4,6 +4,7 @@ const { v4: uuidv4 } = require('uuid');
 const jwt = require('jsonwebtoken');
 
 const { find } = require('../../services/user');
+const refreshTokenService = require('../../services/refreshToken');
 const config = require('../../config');
 
 const router = new Router();
@@ -21,6 +22,20 @@ router.post('/login', async (ctx) => {
   ctx.body = {
     token: jwt.sign({ id: user.id }, config.secret),
     refreshToken,
+  };
+});
+
+router.post('/refresh', async (ctx) => {
+  const { refreshToken } = ctx.request.body;
+  const dbToken = await refreshTokenService.find({ refreshToken });
+  if (!dbToken) {
+    // gives 404 by default
+    return;
+  }
+  const newRefreshToken = uuidv4();
+  ctx.body = {
+    token: jwt.sign({ id: dbToken.userId }, config.secret),
+    refreshToken: newRefreshToken,
   };
 });
 
