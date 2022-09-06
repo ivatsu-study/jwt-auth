@@ -9,6 +9,19 @@ const config = require('../../config');
 
 const router = new Router();
 
+async function issueTokenPair(userId) {
+  const refreshToken = uuidv4();
+  await refreshTokenService.create({
+    refreshToken,
+    userId,
+  });
+
+  return {
+    token: jwt.sign({ id: userId }, config.secret),
+    refreshToken,
+  };
+}
+
 router.post('/login', async (ctx) => {
   const { login, password } = ctx.request.body;
   const user = await find({ login });
@@ -18,11 +31,7 @@ router.post('/login', async (ctx) => {
     throw error;
   }
 
-  const refreshToken = uuidv4();
-  ctx.body = {
-    token: jwt.sign({ id: user.id }, config.secret),
-    refreshToken,
-  };
+  ctx.body = await issueTokenPair(user.id);
 });
 
 router.post('/refresh', async (ctx) => {
@@ -32,11 +41,8 @@ router.post('/refresh', async (ctx) => {
     // gives 404 by default
     return;
   }
-  const newRefreshToken = uuidv4();
-  ctx.body = {
-    token: jwt.sign({ id: dbToken.userId }, config.secret),
-    refreshToken: newRefreshToken,
-  };
+
+  ctx.body = await issueTokenPair(dbToken.userId);
 });
 
 module.exports = router;
