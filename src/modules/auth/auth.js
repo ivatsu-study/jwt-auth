@@ -2,6 +2,7 @@ const Router = require('koa-router');
 const { compareSync } = require('bcryptjs');
 const { v4: uuidv4 } = require('uuid');
 const jwt = require('jsonwebtoken');
+const jwtMiddleware = require('koa-jwt');
 
 const { find } = require('../../services/user');
 const refreshTokenService = require('../../services/refreshToken');
@@ -47,5 +48,13 @@ router.post('/refresh', async (ctx) => {
   });
   ctx.body = await issueTokenPair(dbToken.userId);
 });
+
+router.post('/logout', jwtMiddleware({ secret: config.secret }), async ctx => {
+  const { id: userId } = ctx.state.user;
+  await refreshTokenService.remove({
+    userId,
+  });
+  ctx.body = { success: true };
+})
 
 module.exports = router;
