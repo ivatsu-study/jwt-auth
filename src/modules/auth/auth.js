@@ -42,6 +42,9 @@ router.post('/refresh', async (ctx) => {
     return;
   }
 
+  await refreshTokenService.remove({
+    refreshToken,
+  });
   ctx.body = await issueTokenPair(dbToken.userId);
 });
 
