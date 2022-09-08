@@ -52,6 +52,18 @@ test('User gets 404 on invalid refresh token', async t => {
   t.is(res.status, 404);
 });
 
-test.todo('User can use refresh token only once');
+test('User can use refresh token only once', async t => {
+  const firstRes = await app.post('/auth/refresh').send({
+    refreshToken: 'REFRESH_TOKEN_ONCE',
+  });
+  t.is(firstRes.status, 200);
+  t.truthy(typeof firstRes.body.token === 'string');
+  t.truthy(typeof firstRes.body.refreshToken === 'string');
+
+  const secondRes = await app.post('/auth/refresh').send({
+    refreshToken: 'REFRESH_TOKEN_ONCE',
+  });
+  t.is(secondRes.status, 404);
+});
 test.todo('Refresh tokens become invalid on logout');
 test.todo('Multiple refresh tokens are valid');
