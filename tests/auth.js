@@ -75,4 +75,35 @@ test('Refresh tokens become invalid on logout', async t => {
   });
   t.is(refreshRes.status, 404);
 });
-test.todo('Multiple refresh tokens are valid');
+
+test('Multiple refresh tokens are valid', async t => {
+  const firstLoginRes = await app.post('/auth/login').send({
+    login: 'user2',
+    password: 'user2',
+  });
+  t.is(firstLoginRes.status, 200);
+  t.truthy(typeof firstLoginRes.body.token === 'string');
+  t.truthy(typeof firstLoginRes.body.refreshToken === 'string');
+
+  const secondLoginRes = await app.post('/auth/login').send({
+    login: 'user2',
+    password: 'user2',
+  });
+  t.is(secondLoginRes.status, 200);
+  t.truthy(typeof secondLoginRes.body.token === 'string');
+  t.truthy(typeof secondLoginRes.body.refreshToken === 'string');
+
+  const firstRefreshRes = await app.post('/auth/refresh').send({
+    refreshToken: firstLoginRes.body.refreshToken,
+  });
+  t.is(firstRefreshRes.status, 200);
+  t.truthy(typeof firstRefreshRes.body.token === 'string');
+  t.truthy(typeof firstRefreshRes.body.refreshToken === 'string');
+
+  const secondRefreshRes = await app.post('/auth/refresh').send({
+    refreshToken: secondLoginRes.body.refreshToken,
+  });
+  t.is(secondRefreshRes.status, 200);
+  t.truthy(typeof secondLoginRes.body.token === 'string');
+  t.truthy(typeof secondLoginRes.body.refreshToken === 'string');
+});
