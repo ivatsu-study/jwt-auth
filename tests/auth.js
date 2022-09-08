@@ -65,5 +65,14 @@ test('User can use refresh token only once', async t => {
   });
   t.is(secondRes.status, 404);
 });
-test.todo('Refresh tokens become invalid on logout');
+
+test('Refresh tokens become invalid on logout', async t => {
+  const logoutRes = await app.post('/auth/logout').set('Authorization', `Bearer ${issueToken({ id: 2 })}`);
+  t.is(logoutRes.status, 200);
+
+  const refreshRes = await app.post('/auth/refresh').send({
+    refreshToken: 'REFRESH_TOKEN_ON_LOGOUT',
+  });
+  t.is(refreshRes.status, 404);
+});
 test.todo('Multiple refresh tokens are valid');
