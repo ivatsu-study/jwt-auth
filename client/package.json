@@ -1,0 +1,74 @@
+{
+  "name": "client",
+  "version": "1.0.0",
+  "description": "JWT based Auth with TDD approach (client)",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "ava"
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint"
+    ]
+  },
+  "keywords": [
+    "jwt",
+    "js"
+  ],
+  "author": "IvaTsu",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/preset-env": "^7.19.0",
+    "@babel/register": "^7.18.9",
+    "@babel/runtime": "^7.19.0",
+    "ava": "^4.3.3",
+    "axios-mock-adapter": "^1.21.2",
+    "eslint": "^8.23.1",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.26.0",
+    "husky": "^8.0.1",
+    "lint-staged": "^13.0.3"
+  },
+  "dependencies": {
+    "axios": "^0.27.2"
+  },
+  "eslintConfig": {
+    "extends": [
+      "airbnb-base",
+      "prettier"
+    ],
+    "rules": {
+      "no-param-reassign": [
+        "error",
+        {
+          "props": false
+        }
+      ]
+    },
+    "env": {}
+  },
+  "prettier": {
+    "trailingComma": "all"
+  },
+  "babel": {
+    "presets": [
+      [
+        "@babel/preset-env",
+        {
+          "targets": {
+            "node": "current"
+          }
+        }
+      ]
+    ]
+  },
+  "ava": {
+    "files": [
+      "tests/**/*.js"
+    ],
+    "require": [
+      "@babel/register"
+    ]
+  }
+}
