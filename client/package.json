@@ -21,7 +21,6 @@
     "@babel/preset-env": "^7.19.0",
     "@babel/register": "^7.18.9",
     "@babel/runtime": "^7.19.0",
-    "ava": "^4.3.3",
     "axios-mock-adapter": "^1.21.2",
     "eslint": "^8.23.1",
     "eslint-config-airbnb-base": "^15.0.0",
@@ -31,6 +30,7 @@
     "lint-staged": "^13.0.3"
   },
   "dependencies": {
+    "ava": "^4.3.3",
     "axios": "^0.27.2"
   },
   "eslintConfig": {
@@ -46,7 +46,22 @@
         }
       ]
     },
-    "env": {}
+    "env": {
+      "node": true
+    },
+    "settings": {
+      "import/resolver": {
+        "node": {
+          "extensions": [
+            ".js",
+            ".jsx",
+            ".ts",
+            ".tsx",
+            ".d.ts"
+          ]
+        }
+      }
+    }
   },
   "prettier": {
     "trailingComma": "all"
