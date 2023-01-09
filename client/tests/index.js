@@ -23,6 +23,7 @@ test("Login captures token information", async (t) => {
   await api.login(LOGIN_REQUEST);
   await api.getUsers();
 
+  // verify that GET /users was called
   t.is(mock.history.get.length, 1);
   t.is(
     mock.history.get[0].headers.Authorization,
