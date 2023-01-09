@@ -57,3 +57,49 @@ test("Logout removes token information", async (t) => {
   t.is(mock.history.get.length, 1);
   t.falsy(mock.history.get[0].headers.Authorization);
 });
+
+test("Correctly retries request when got 401 with new token", async (t) => {
+  const { mock, api } = t.context;
+
+  // outdated login data
+  const LOGIN_REQUEST = {
+    login: "login",
+    password: "password",
+  };
+  const LOGIN_RESPONSE = {
+    token: "TOKEN",
+    refreshToken: "REFRESH_TOKEN",
+  };
+
+  // refresh data
+  const REFRESH_REQUEST = {
+    refreshToken: LOGIN_RESPONSE.refreshToken,
+  };
+  const REFRESH_RESPONSE = {
+    token: "TOKEN2",
+    refreshToken: "REFRESH_TOKEN2",
+  };
+
+  mock.onPost("/auth/login", LOGIN_REQUEST).reply(200, LOGIN_RESPONSE);
+  mock.onPost("/auth/refresh", REFRESH_REQUEST).reply(200, REFRESH_RESPONSE);
+  mock.onGet("/users").reply((config) => {
+    const { Authorization: auth } = config.headers;
+    if (auth === `Bearer ${LOGIN_RESPONSE.token}`) {
+      return [401];
+    }
+    if (auth === `Bearer ${REFRESH_RESPONSE.token}`) {
+      return [200, []];
+    }
+    return [404];
+  });
+
+  await api.login(LOGIN_REQUEST);
+  await api.getUsers();
+
+  // verify 2 API calls: /login and /users
+  t.is(mock.history.get.length, 2);
+  t.is(
+    mock.history.get[1].headers.Authorization,
+    `Bearer ${REFRESH_RESPONSE.token}`,
+  );
+});

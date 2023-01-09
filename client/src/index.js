@@ -20,6 +20,31 @@ export default class Api {
       },
       (e) => Promise.reject(e),
     );
+
+    this.client.interceptors.response.use(
+      (res) => res,
+      async (error) => {
+        if (
+          !this.refreshToken ||
+          error.response.status !== 401 ||
+          error.config.retry
+        ) {
+          throw error;
+        }
+        const { data } = await this.client.post("/auth/refresh", {
+          refreshToken: this.refreshToken,
+        });
+        this.token = data.token;
+        this.refreshToken = data.refreshToken;
+
+        const newRequest = {
+          ...error.config,
+          retry: true,
+        };
+
+        return this.client(newRequest);
+      },
+    );
   }
 
   async login({ login, password }) {
