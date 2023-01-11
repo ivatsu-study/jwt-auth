@@ -5,6 +5,7 @@ export default class Api {
     this.client = options.client || axios.create();
     this.token = options.token;
     this.refreshToken = options.refreshToken;
+    this.refreshRequest = null;
 
     this.client.interceptors.request.use(
       (config) => {
@@ -31,9 +32,12 @@ export default class Api {
         ) {
           throw error;
         }
-        const { data } = await this.client.post("/auth/refresh", {
-          refreshToken: this.refreshToken,
-        });
+        if (!this.refreshRequest) {
+          this.refreshRequest = this.client.post("/auth/refresh", {
+            refreshToken: this.refreshToken,
+          });
+        }
+        const { data } = await this.refreshRequest;
         this.token = data.token;
         this.refreshToken = data.refreshToken;
 
