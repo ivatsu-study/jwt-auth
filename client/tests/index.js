@@ -103,3 +103,12 @@ test("Correctly retries request when got 401 with new token", async (t) => {
     `Bearer ${REFRESH_RESPONSE.token}`,
   );
 });
+
+test("Correctly fails when got non-401 response", async (t) => {
+  const { mock, api } = t.context;
+
+  mock.onGet("/users").reply(404);
+  await t.throwsAsync(async () => {
+    await api.getUsers();
+  });
+});
